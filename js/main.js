@@ -25,10 +25,10 @@ form.addEventListener("submit", (evento) => {
 
         atualizaElemento(itemAtual)
 
-        storageItens[existe.id] = itemAtual
+        storageItens[storageItens.findIndex(elemento => elemento.id === existe.id)] = itemAtual
 
     } else {
-        itemAtual.id = storageItens.length
+        itemAtual.id = storageItens[storageItens.length - 1] ? (storageItens[storageItens.length - 1].id + 1) : 0;
         criaElemento(itemAtual)
         storageItens.push(itemAtual)
     }
@@ -49,26 +49,30 @@ function criaElemento(item) {
     novoItem.appendChild(numeroItem)
 
     novoItem.innerHTML += item.nome
-    novoItem.appendChild(botaoDeleta())
+    novoItem.appendChild(botaoDeleta(item.id))
 
     lista.appendChild(novoItem)
 }
 
 function atualizaElemento(item) {
-    document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade
+    document.querySelector("[data-id='" + item.id + "']").innerHTML = item.quantidade
 }
 
-function botaoDeleta() {
+function botaoDeleta(id) {
     const elementoBotao = document.createElement("button")
     elementoBotao.innerText = "X"
 
-    elementoBotao.addEventListener("click", function() {
-        deletaElemento(this.parentNode);
+    elementoBotao.addEventListener("click", function () {
+        deletaElemento(this.parentNode, id);
     })
 
     return elementoBotao
 }
 
-function deletaElemento(tag) {
+function deletaElemento(tag, id) {
     tag.remove()
+
+    storageItens.splice(storageItens.findIndex(elemento => elemento.id == id), 1)
+
+    localStorage.setItem("itens", JSON.stringify(storageItens))
 }
