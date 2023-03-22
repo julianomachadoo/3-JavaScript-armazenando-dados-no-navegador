@@ -1,9 +1,9 @@
 const form = document.getElementById("novoItem")
 const lista = document.getElementById("lista")
-const itens = JSON.parse(localStorage.getItem("itens")) || []
+const storageItens = JSON.parse(localStorage.getItem("itens")) || []
 
 
-itens.forEach((elemento) => {
+storageItens.forEach((elemento) => {
     criaElemento(elemento)
 })
 
@@ -13,7 +13,7 @@ form.addEventListener("submit", (evento) => {
     const nome = evento.target.elements['nome']
     const quantidade = evento.target.elements['quantidade']
 
-    const existe = itens.find(elemento => elemento.nome === nome.value)
+    const existe = storageItens.find(elemento => elemento.nome === nome.value)
 
     const itemAtual = {
         "nome": nome.value,
@@ -25,15 +25,15 @@ form.addEventListener("submit", (evento) => {
 
         atualizaElemento(itemAtual)
 
+        storageItens[existe.id] = itemAtual
+
     } else {
-        itemAtual.id = itens.length
+        itemAtual.id = storageItens.length
         criaElemento(itemAtual)
-        itens.push(itemAtual)
+        storageItens.push(itemAtual)
     }
 
-    console.log(itemAtual)
-    console.log(JSON.stringify(itens))
-    localStorage.setItem("itens", JSON.stringify(itens))
+    localStorage.setItem("itens", JSON.stringify(storageItens))
 
     nome.value = ""
     quantidade.value = ""
